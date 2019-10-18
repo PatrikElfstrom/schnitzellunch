@@ -1,44 +1,44 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Schnitzellunch
 
-## Available Scripts
+https://schnitzellunch.patrikelfstrom.se/
 
-In the project directory, you can run:
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b94b2836-cf67-46fc-9c23-1b353ad1f2bb/deploy-status)](https://app.netlify.com/sites/schnitzellunch/deploys)
 
-### `yarn start`
+* Staticly hosted on Netlify
+* Master is automatically built and deployed
+* Scraping is done with Netlify Functions (AWS Lambda)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**WARNING: The scraping is never cached and done on every request. Data should be saved to the database.**
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## TODO
 
-### `yarn test`
+* Cache scraping results in database
+* Scrape all days when scraping kvartersmenyn (now only scraping Friday)
+* Build frontend
+* Add support for more sites
+* ...
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Hosting
+https://app.netlify.com/sites/schnitzellunch/overview
 
-### `yarn build`
+## Backend
+Netlify Functions (AWS Lambda)
+https://docs.netlify.com/functions/overview/
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Functions are placed in `src/lambda`.
+Example: src/lambda/schnitzel.js
+Which can then be accessed at `/.netlify/functions/schnitzel`
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Database
+Thinking about using FaunaDB since it's free and Netlify has built in support.
+Has also support for GraphQL.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+https://dashboard.fauna.com/db/schnitzellunch
 
-### `yarn eject`
+## Dev
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+It's a create-react-app app.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+To run webpack dev server and Netlify functions locally at the same host:
+`$ npm i -g netlify-cli`
+`$ netlify dev`
