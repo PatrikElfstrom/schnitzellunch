@@ -1,0 +1,6 @@
+[build]
+  # Directory with the serverless Lambda functions to deploy to AWS.
+  functions = "src/lambda/"
+
+  # Set AWS Lambda JS Runtime (default: nodejs8.10)
+  AWS_LAMBDA_JS_RUNTIME = "nodejs10.x"
