@@ -1,0 +1,10 @@
+type Restaurant {
+  title: String
+  address: String!
+  phone: String!
+  menuItems: [String]
+}
+
+type Query {
+  restaurants: [Restaurant!]
+}
