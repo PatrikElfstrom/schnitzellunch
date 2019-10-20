@@ -2,13 +2,13 @@
 
 https://schnitzellunch.patrikelfstrom.se/
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/b94b2836-cf67-46fc-9c23-1b353ad1f2bb/deploy-status)](https://app.netlify.com/sites/schnitzellunch/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f7653c2a-ff32-44da-8ebe-65e0a144778c/deploy-status)](https://app.netlify.com/sites/schnitzellunch/deploys)
 
-* Staticly hosted on Netlify
-* Master is automatically built and deployed
-* Scraping is done with Netlify Functions (AWS Lambda)
-* Result from scraping is saved in a Fauna database
-* Data is retrieved via GraphQL
+- Staticly hosted on Netlify
+- Master is automatically built and deployed
+- Scraping is done with Netlify Functions (AWS Lambda)
+- Result from scraping is saved in a Fauna database
+- Data is retrieved via GraphQL
 
 ## Hosting
 https://app.netlify.com/sites/schnitzellunch/overview
