@@ -1,25 +1,17 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 import { Restaurants } from './Restaurants';
+import { WeekDaySelector } from './WeekDaySelector';
+import { currentWeekDay } from './helpers/date';
 
 const App: React.FC = () => {
+  const [weekDay, setWeekDay] = useState(currentWeekDay());
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Restaurants />
+        <WeekDaySelector weekDay={weekDay} setWeekDay={setWeekDay} />
+        <Restaurants weekDay={weekDay} />
       </header>
     </div>
   );

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-const parseHTML = async ({ data }) => {
+const parseHTML = async ({ data }, weekDay) => {
   const $ = cheerio.load(data);
   const restaurants = [];
 
@@ -28,6 +28,7 @@ const parseHTML = async ({ data }) => {
         title,
         address,
         phone,
+        weekDay,
         menuItems
       });
     }
@@ -36,11 +37,11 @@ const parseHTML = async ({ data }) => {
   return restaurants;
 };
 
-const getMenuItems = (day = 5, city = 19) =>
+const getMenuItems = (weekDay = 5, city = 19) =>
   axios
-    .get(`http://www.kvartersmenyn.se/find/_/city/${city}/day/${day}`)
-    .then(parseHTML)
-    .then(async data => JSON.stringify(data))
+    .get(`http://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
+    .then(data => parseHTML(data, weekDay))
+    .then(data => JSON.stringify(data))
     .catch(error => console.error(error));
 
 export const handler = async () => ({

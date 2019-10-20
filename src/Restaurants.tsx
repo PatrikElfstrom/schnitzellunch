@@ -6,12 +6,12 @@ type Restaurant = {
   title: string;
   address: string;
   phone: string;
-  menuItems: [string];
+  menuItems: string[];
 };
 
 const GET_RESTAURANTS = gql`
-  {
-    restaurants {
+  query getRestaurants($weekDay: Int) {
+    restaurants(weekDay: $weekDay) {
       data {
         title
         address
@@ -22,11 +22,15 @@ const GET_RESTAURANTS = gql`
   }
 `;
 
-export const Restaurants = () => {
-  const { loading, error, data } = useQuery(GET_RESTAURANTS);
+export const Restaurants = ({ weekDay }: { weekDay: number }) => {
+  const { loading, error, data } = useQuery(GET_RESTAURANTS, {
+    variables: { weekDay }
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{`Error! ${error.message}`}</p>;
+  if (data.restaurants.data.length <= 0)
+    return <p>No restaurants serves schnitzel this day...</p>;
 
   return (
     <ul>
