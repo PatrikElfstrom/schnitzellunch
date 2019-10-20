@@ -26,13 +26,13 @@
     "typescript": "3.6.4"
   },
   "scripts": {
+    "dev": "NODE_ENV=development npx --node-arg=--inspect netlify dev",
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build": "npm run build:app && npm run build:lambda",
     "build:app": "react-scripts build",
     "build:lambda": "npx netlify-lambda build src/lambda",
-    "serve:lambda": "npx netlify-lambda serve build",
     "upgrade-interactive": "npm-check --update --save-exact"
   },
   "eslintConfig": {
