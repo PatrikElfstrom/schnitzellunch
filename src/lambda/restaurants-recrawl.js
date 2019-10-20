@@ -4,7 +4,10 @@ const sites = ['kvartersmenyn'];
 
 const saveRestaurant = data =>
   axios
-    .post('http://localhost:8888/.netlify/functions/restaurants-add', data)
+    .post(
+      'https://schnitzellunch.patrikelfstrom.se/.netlify/functions/restaurants-add',
+      data
+    )
     .then(function(response) {
       console.log(response);
     })
@@ -28,7 +31,9 @@ export const handler = async () => {
 
         return (
           axios
-            .get(`http://localhost:8888/.netlify/functions/${site}`)
+            .get(
+              `https://schnitzellunch.patrikelfstrom.se/.netlify/functions/${site}`
+            )
             // .catch(error => console.error(error));
             .then(({ data }) => saveRestaurant(data))
             .then(
