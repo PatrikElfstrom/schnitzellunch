@@ -5,7 +5,7 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_SERVER_SECRET
 });
 
-exports.handler = event => {
+export const handler = async event => {
   let restaurants = JSON.parse(event.body);
 
   // Make data to an array if not an array
@@ -18,7 +18,7 @@ exports.handler = event => {
       restaurants.map(async restaurant => {
         return client
           .query(
-            query.Create(query.Collection('Restaurant'), { data: restaurant })
+            query.Create(query.Ref('classes/Restaurant'), { data: restaurant })
           )
           .then(response => {
             console.log('success', response);
