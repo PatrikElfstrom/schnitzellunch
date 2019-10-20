@@ -7,16 +7,8 @@ https://schnitzellunch.patrikelfstrom.se/
 * Staticly hosted on Netlify
 * Master is automatically built and deployed
 * Scraping is done with Netlify Functions (AWS Lambda)
-
-**WARNING: The scraping is never cached and done on every request. Data should be saved to the database.**
-
-## TODO
-
-* Cache scraping results in database
-* Scrape all days when scraping kvartersmenyn (now only scraping Friday)
-* Build frontend
-* Add support for more sites
-* ...
+* Result from scraping is saved in a Fauna database
+* Data is retrieved via GraphQL
 
 ## Hosting
 https://app.netlify.com/sites/schnitzellunch/overview
@@ -30,8 +22,7 @@ Example: src/lambda/schnitzel.js
 Which can then be accessed at `/.netlify/functions/schnitzel`
 
 ## Database
-Thinking about using FaunaDB since it's free and Netlify has built in support.
-Has also support for GraphQL.
+FaunaDB
 
 https://dashboard.fauna.com/db/schnitzellunch
 
@@ -40,5 +31,5 @@ https://dashboard.fauna.com/db/schnitzellunch
 It's a create-react-app app.
 
 To run webpack dev server and Netlify functions locally at the same host:
-`$ npm i -g netlify-cli`
-`$ netlify dev`
+
+`$ npm run dev`
