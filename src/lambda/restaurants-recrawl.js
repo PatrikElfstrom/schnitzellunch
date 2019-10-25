@@ -8,11 +8,9 @@ const saveRestaurant = data =>
       'https://schnitzellunch.patrikelfstrom.se/.netlify/functions/restaurants-add',
       data
     )
-    .then(function(response) {
-      console.log(response);
-    })
-    .catch(function(error) {
-      console.log(error);
+    .catch(error => {
+      console.error(error);
+      throw error;
     });
 
 export const handler = async () => {
@@ -29,26 +27,31 @@ export const handler = async () => {
       sites.map(async site => {
         const siteTimerStart = Date.now();
 
-        return (
-          axios
-            .get(
-              `https://schnitzellunch.patrikelfstrom.se/.netlify/functions/${site}`
-            )
-            // .catch(error => console.error(error));
-            .then(({ data }) => saveRestaurant(data))
-            .then(
-              () =>
-                message(
-                  `${site} succeeded in ${(Date.now() - siteTimerStart) /
-                    1000} seconds`
-                ),
-              error =>
-                message(
-                  `${site} failed in ${(Date.now() - siteTimerStart) /
-                    1000} seconds - ${error}`
-                )
-            )
-        );
+        return axios
+          .get(
+            `https://schnitzellunch.patrikelfstrom.se/.netlify/functions/${site}`
+          )
+          .then(response => {
+            message(
+              `${site} crawled in ${(Date.now() - siteTimerStart) /
+                1000} seconds`
+            );
+            return response;
+          })
+          .then(({ data }) => saveRestaurant(data))
+          .then(
+            () =>
+              message(
+                `${site} completed successfully in ${(Date.now() -
+                  siteTimerStart) /
+                  1000} seconds`
+              ),
+            error =>
+              message(
+                `${site} failed in ${(Date.now() - siteTimerStart) /
+                  1000} seconds - ${error}`
+              )
+          );
       })
     ).then(() => {
       message(

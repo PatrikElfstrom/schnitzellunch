@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "netlify-cli": "2.19.3",
     "npm-check": "5.9.0"
   }
 }

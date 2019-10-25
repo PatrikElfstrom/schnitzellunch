@@ -6,37 +6,42 @@ const client = new faunadb.Client({
 });
 
 export const handler = async event => {
-  let restaurants = JSON.parse(event.body);
+  let body = '';
+  let { restaurants } = JSON.parse(event.body);
+
+  const message = message => {
+    body += `\n${message}`;
+    console.log(message);
+    return message;
+  };
 
   // Make data to an array if not an array
   if (!Array.isArray(restaurants)) {
     restaurants = [restaurants];
   }
 
-  return new Promise((resolve, reject) => {
-    return Promise.all(
-      restaurants.map(async restaurant => {
-        return client
-          .query(
-            query.Create(query.Ref('classes/Restaurant'), { data: restaurant })
-          )
-          .then(response => {
-            console.log('success', response);
+  return Promise.all(
+    restaurants.map(async restaurant => {
+      return client
+        .query(
+          query.Create(query.Ref('classes/Restaurant'), { data: restaurant })
+        )
+        .then(() => message(`Successfully added: ${restaurant.title}`))
+        .catch(error => {
+          message(`Failed to add: ${JSON.stringify(restaurant)}`);
+          message(`Error: ${error.message}`);
 
-            return {
-              statusCode: 200,
-              body: JSON.stringify(response)
-            };
-          })
-          .catch(error => {
-            console.error(error);
-
-            return {
-              statusCode: 400,
-              body: JSON.stringify(error)
-            };
-          });
-      })
-    ).then(result => resolve(result), error => reject(error));
-  });
+          throw error;
+        });
+    })
+  ).then(
+    result => ({
+      statusCode: 200,
+      body
+    }),
+    error => ({
+      statusCode: error.requestResult.statusCode,
+      body: error.requestResult.responseRaw
+    })
+  );
 };

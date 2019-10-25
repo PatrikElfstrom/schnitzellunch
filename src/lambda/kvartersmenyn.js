@@ -34,7 +34,7 @@ const parseHTML = async ({ data }, weekDay) => {
     }
   });
 
-  return restaurants;
+  return { restaurants };
 };
 
 const getMenuItems = (weekDay = 5, city = 19) =>
@@ -42,6 +42,10 @@ const getMenuItems = (weekDay = 5, city = 19) =>
     .get(`http://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
     .then(data => parseHTML(data, weekDay))
     .then(data => JSON.stringify(data))
+    .then(data => {
+      console.log(`Crawl results: ${data}`);
+      return data;
+    })
     .catch(error => console.error(error));
 
 export const handler = async () => ({
