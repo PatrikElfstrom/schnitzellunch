@@ -10,8 +10,8 @@ type Restaurant = {
 };
 
 const GET_RESTAURANTS = gql`
-  query getRestaurants($weekDay: Int) {
-    restaurants(weekDay: $weekDay) {
+  query getRestaurants($weekDay: Int, $week: Int) {
+    restaurants(weekDay: $weekDay, week: $week) {
       data {
         title
         address
@@ -22,9 +22,15 @@ const GET_RESTAURANTS = gql`
   }
 `;
 
-export const Restaurants = ({ weekDay }: { weekDay: number }) => {
+export const Restaurants = ({
+  weekDay,
+  week
+}: {
+  weekDay: number;
+  week: number;
+}) => {
   const { loading, error, data } = useQuery(GET_RESTAURANTS, {
-    variables: { weekDay }
+    variables: { weekDay, week }
   });
 
   if (loading) return <p>Loading...</p>;

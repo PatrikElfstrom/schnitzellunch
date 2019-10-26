@@ -1,4 +1,8 @@
+import { getISOWeek } from 'date-fns';
+
 export const currentWeekDay = () => new Date().getDay();
+
+export const currentWeek = () => getISOWeek(new Date());
 
 export const getLocalizedWeekDay = (date: Date, locale?: string | undefined) =>
   new Date(date).toLocaleString(locale, { weekday: 'long' });

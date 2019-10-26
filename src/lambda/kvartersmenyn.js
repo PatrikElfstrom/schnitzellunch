@@ -1,8 +1,9 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { decode } from 'he';
+import { getISOWeek } from 'date-fns';
 
-const parseHTML = async ({ data }, weekDay) => {
+const parseHTML = async ({ data }, weekDay, week) => {
   const $ = cheerio.load(data);
   const restaurants = [];
 
@@ -35,6 +36,7 @@ const parseHTML = async ({ data }, weekDay) => {
         title,
         address,
         phone,
+        week,
         weekDay,
         menuItems
       });
@@ -44,10 +46,10 @@ const parseHTML = async ({ data }, weekDay) => {
   return { restaurants };
 };
 
-const getMenuItems = (weekDay = 5, city = 19) =>
+const getMenuItems = (weekDay = 5, week = getISOWeek(new Date()), city = 19) =>
   axios
     .get(`http://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
-    .then(data => parseHTML(data, weekDay))
+    .then(data => parseHTML(data, weekDay, week))
     .then(data => JSON.stringify(data))
     .then(data => {
       console.log(`Crawl results: ${data}`);

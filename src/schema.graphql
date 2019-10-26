@@ -1,11 +1,13 @@
 type Restaurant {
-  title: String
-  address: String!
-  phone: String!
-  weekDay: Int
-  menuItems: [String]
+  title: String!
+  address: String
+  phone: String
+  week: Int!
+  weekDay: Int!
+  menuItems: [String]!
 }
 
 type Query {
-  restaurants(weekDay: Int): [Restaurant!]
+  restaurants(weekDay: Int, week: Int): [Restaurant]!
+  restaurant(title: String!, weekDay: Int!, week: Int!): Restaurant
 }
