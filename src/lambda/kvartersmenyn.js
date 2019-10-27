@@ -1,7 +1,13 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { decode } from 'he';
-import { getISOWeek } from 'date-fns';
+import { getISOWeek, getISODay } from 'date-fns';
+
+// Sleep a random time betwen 0 and milliseconds
+const randomSleep = milliseconds =>
+  new Promise(resolve =>
+    setTimeout(resolve, Math.round(Math.random() * milliseconds))
+  );
 
 const parseHTML = async ({ data }, weekDay, week) => {
   const $ = cheerio.load(data);
@@ -43,21 +49,42 @@ const parseHTML = async ({ data }, weekDay, week) => {
     }
   });
 
-  return { restaurants };
+  return restaurants;
 };
 
-const getMenuItems = (weekDay = 5, week = getISOWeek(new Date()), city = 19) =>
+const getMenuItems = async (
+  weekDay = getISODay(new Date()),
+  week = getISOWeek(new Date()),
+  city = 19 // Gothenburg at kvartersmenyn
+) =>
   axios
     .get(`http://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
     .then(data => parseHTML(data, weekDay, week))
-    .then(data => JSON.stringify(data))
-    .then(data => {
-      console.log(`Crawl results: ${data}`);
-      return data;
-    })
     .catch(error => console.error(error));
 
-export const handler = async () => ({
-  statusCode: 200,
-  body: await getMenuItems()
-});
+export const handler = async ({
+  queryStringParameters: { weekDay, week, city }
+}) => {
+  let restaurants;
+
+  if (!weekDay) {
+    // If no weekDay is set, loop thru all week days
+    restaurants = await Promise.all(
+      [1, 2, 3, 4, 5, 6, 7].map(async weekDay => {
+        // sleep a random time between 0 and 5000 to simulate a human request
+        await randomSleep(5000);
+        return await getMenuItems(weekDay, week, city);
+      })
+    ).then(a => a.flatMap(b => b)); // since flatMap doesn't like promises we need to flatMap the array after
+  } else {
+    // Otherwise get todays items
+    restaurants = await getMenuItems(weekDay, week, city);
+  }
+
+  console.log(`Crawl results: ${JSON.stringify(restaurants)}`);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ restaurants })
+  };
+};

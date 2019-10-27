@@ -5,15 +5,66 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_SERVER_SECRET
 });
 
-export const handler = async event => {
-  let body = '';
-  let { restaurants } = JSON.parse(event.body);
+const getRestaurant = restaurant =>
+  client
+    .query(
+      query.Get(
+        query.Match(query.Index('restaurant'), [
+          restaurant.title,
+          restaurant.weekDay,
+          restaurant.week
+        ])
+      )
+    )
+    .then(response => {
+      console.log(`Successfully matched: ${restaurant.title}`);
 
-  const message = message => {
-    body += `\n${message}`;
-    console.log(message);
-    return message;
-  };
+      return response;
+    })
+    .catch(error => {
+      console.log(
+        `Could not match: week: ${restaurant.week}, weekDay: ${restaurant.weekDay} - ${restaurant.title}`
+      );
+
+      throw error;
+    });
+
+const replaceRestaurant = ({ ref }, restaurant) =>
+  client
+    .query(query.Replace(ref, { data: restaurant }))
+    .then(response => {
+      console.log(
+        `Successfully replaced: week: ${restaurant.week}, weekDay: ${restaurant.weekDay} - ${restaurant.title}`
+      );
+
+      return response;
+    })
+    .catch(error => {
+      console.error(`Failed to replace: ${JSON.stringify(restaurant)}`);
+      console.error(`Error: ${error.message}`);
+
+      throw error;
+    });
+
+const createRestaurant = restaurant =>
+  client
+    .query(query.Create(query.Ref('classes/Restaurant'), { data: restaurant }))
+    .then(response => {
+      console.log(
+        `Successfully created: week: ${restaurant.week}, weekDay: ${restaurant.weekDay} - ${restaurant.title}`
+      );
+
+      return response;
+    })
+    .catch(error => {
+      console.error(`Failed to create: ${JSON.stringify(restaurant)}`);
+      console.error(`Error: ${error.message}`);
+
+      throw error;
+    });
+
+export const handler = async event => {
+  let { restaurants } = JSON.parse(event.body);
 
   // Make data to an array if not an array
   if (!Array.isArray(restaurants)) {
@@ -21,27 +72,22 @@ export const handler = async event => {
   }
 
   return Promise.all(
-    restaurants.map(async restaurant => {
-      return client
-        .query(
-          query.Create(query.Ref('classes/Restaurant'), { data: restaurant })
-        )
-        .then(() => message(`Successfully added: ${restaurant.title}`))
-        .catch(error => {
-          message(`Failed to add: ${JSON.stringify(restaurant)}`);
-          message(`Error: ${error.message}`);
-
-          throw error;
-        });
-    })
+    restaurants.map(async restaurant =>
+      getRestaurant(restaurant)
+        .then(response => replaceRestaurant(response, restaurant))
+        .catch(() => createRestaurant(restaurant))
+    )
   ).then(
-    result => ({
+    () => ({
       statusCode: 200,
-      body
+      body: ''
     }),
-    error => ({
-      statusCode: error.requestResult.statusCode,
-      body: error.requestResult.responseRaw
-    })
+    error => {
+      console.error(error);
+      return {
+        statusCode: error.requestResult.statusCode,
+        body: error.requestResult.responseRaw
+      };
+    }
   );
 };
