@@ -1,3 +1,4 @@
+import 'core-js/features/array/flat-map';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { decode } from 'he';
