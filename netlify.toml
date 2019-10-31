@@ -5,3 +5,21 @@
 
   # Set AWS Lambda JS Runtime (default: nodejs8.10)
   AWS_LAMBDA_JS_RUNTIME = "nodejs10.x"
+
+[[redirects]]
+  from = "https://schnitzellunch.patrikelfstrom.se/*"
+  to = "https://schnitzellunch.se/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://schnitzellunch.com/*"
+  to = "https://schnitzellunch.se/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.schnitzellunch.com/*"
+  to = "https://schnitzellunch.se/:splat"
+  status = 301
+  force = true
