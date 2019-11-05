@@ -1,6 +1,6 @@
 # Schnitzellunch
 
-https://schnitzellunch.patrikelfstrom.se/
+https://schnitzellunch.se/
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f7653c2a-ff32-44da-8ebe-65e0a144778c/deploy-status)](https://app.netlify.com/sites/schnitzellunch/deploys)
 
@@ -11,11 +11,10 @@ https://schnitzellunch.patrikelfstrom.se/
 - Data is retrieved via GraphQL
 
 ## Hosting
-https://app.netlify.com/sites/schnitzellunch/overview
+Netlify
 
 ## Backend
 Netlify Functions (AWS Lambda)
-https://docs.netlify.com/functions/overview/
 
 Functions are placed in `src/lambda`.
 Example: src/lambda/schnitzel.js
@@ -23,8 +22,6 @@ Which can then be accessed at `/.netlify/functions/schnitzel`
 
 ## Database
 FaunaDB
-
-https://dashboard.fauna.com/db/schnitzellunch
 
 ## Dev
 
