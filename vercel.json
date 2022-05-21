@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/restaurants.ts": {
-      "includeFiles": "lib/**"
-    }
-  }
-}
