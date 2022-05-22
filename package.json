@@ -20,6 +20,9 @@
   },
   "dependencies": {
     "@prisma/client": "^3.14.0",
-    "solid-js": "^1.4.2"
+    "@trpc/client": "^9.23.4",
+    "@trpc/server": "^9.23.4",
+    "solid-js": "^1.4.2",
+    "zod": "^3.17.0"
   }
 }
