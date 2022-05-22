@@ -1,5 +1,5 @@
 node_modules
 dist
+.vercel
 schnitzellunch-old
 schnitzellunch-old2
-.vercel
