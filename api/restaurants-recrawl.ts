@@ -14,30 +14,47 @@ const message = (message: string) => {
   console.log(message);
 };
 
-interface ExtendedResturant extends Restaurant {
-  menuItems: string[];
+export interface ExtendedResturant
+  extends Pick<Restaurant, "title" | "address" | "phone"> {
+  menuItems: Pick<MenuItem, "description" | "week" | "weekDay">[];
 }
 
 const saveRestaurant = (restaurants: ExtendedResturant[]) =>
-  Promise.all(
+  Promise.allSettled(
     restaurants.map((restaurant) => {
-      return prisma.restaurant.create({
-        data: {
+      return prisma.restaurant.upsert({
+        where: {
+          title: restaurant.title,
+        },
+        update: {
           ...restaurant,
           menuItems: {
-            create: restaurant.menuItems.map((menuItem) => ({
-              name: menuItem,
-            })),
+            create: restaurant.menuItems,
+          },
+        },
+        create: {
+          ...restaurant,
+          menuItems: {
+            create: restaurant.menuItems,
           },
         },
       });
     })
-  );
+  ).then((results) => {
+    const failed = results.filter((result) => result.status === "rejected");
+    const fulfilled = results.filter((result) => result.status === "fulfilled");
 
-const makeRequest = async (site: string) => {
+    if (failed.length) {
+      console.log(`Failed to save ${failed.length} restaurants`);
+    }
+
+    if (fulfilled.length) {
+      console.log(`Saved ${fulfilled.length} restaurants`);
+    }
+  });
+
+const makeRequest = async (site: string, week?: number, weekDay?: number) => {
   const siteTimerStart = Date.now();
-  const weekDay = dayjs().isoWeekday();
-  const week = dayjs().isoWeek();
   const city = 19; // Gothenburg at kvartersmenyn
 
   try {
@@ -72,8 +89,24 @@ export default async function handler(
 ) {
   const sitesTimerStart = Date.now();
 
+  const {
+    weekDay: _weekDay,
+    week: _week,
+    city: _city,
+    fullWeek: _fullWeek,
+  } = request.query;
+
+  const fullWeek = _fullWeek === "true";
+  const week = parseInt(_week as string) || dayjs().isoWeek();
+  const weekDay =
+    parseInt(_weekDay as string) || fullWeek ? undefined : dayjs().isoWeekday();
+  const city = parseInt(_city as string) || undefined;
+
   for (const site of sites) {
-    await makeRequest(site);
+    console.log(
+      `Crawling site: ${site}, week: ${week}, weekDay: ${weekDay}, city: ${city}`
+    );
+    await makeRequest(site, week, weekDay);
   }
 
   message(

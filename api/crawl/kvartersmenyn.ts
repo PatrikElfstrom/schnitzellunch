@@ -3,15 +3,7 @@ import got from "got";
 import { load } from "cheerio";
 import { decode } from "he";
 import { setTimeout } from "node:timers/promises";
-
-interface Restaurant {
-  title: string;
-  address: string;
-  phone: string;
-  week: number;
-  weekDay: number;
-  menuItems: string[];
-}
+import { ExtendedResturant } from "../restaurants-recrawl";
 
 // Sleep a random time betwen 0 and milliseconds
 const randomSleep = (milliseconds: number) =>
@@ -19,7 +11,7 @@ const randomSleep = (milliseconds: number) =>
 
 const parseHTML = async (data: string, weekDay: number, week: number) => {
   const $ = load(data);
-  const restaurants: Restaurant[] = [];
+  const restaurants: ExtendedResturant[] = [];
 
   $("#lista .panel").each((index, restaurant) => {
     const title = decode($(".name .t_lunch", restaurant).text().trim());
@@ -49,9 +41,11 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
         title,
         address,
         phone,
-        week,
-        weekDay,
-        menuItems,
+        menuItems: menuItems.map((menuItem) => ({
+          description: menuItem,
+          week,
+          weekDay,
+        })),
       });
     }
   });
@@ -71,18 +65,22 @@ export default async function handler(
 ) {
   const { weekDay: _weekDay, week: _week, city: _city } = request.query;
 
-  const weekDay = parseInt(
-    typeof _weekDay === "string" ? _weekDay : _weekDay[0]
-  );
-  const week = parseInt(typeof _week === "string" ? _week : _week[0]);
-  const city = parseInt(typeof _city === "string" ? _city : _city[0]);
+  const weekDay = parseInt(_weekDay as string) || undefined;
+  const week = parseInt(_week as string) || undefined;
+  const city = parseInt(_city as string) || undefined;
 
-  let restaurants: Restaurant[] = [];
+  if (!week || !city) {
+    response.status(400).json("Missing parameters");
+    return;
+  }
+
+  let restaurants: ExtendedResturant[] = [];
 
   if (!weekDay) {
     // If no weekDay is set, loop thru all week days
     for (const weekDay of [1, 2, 3, 4, 5, 6, 7]) {
       await randomSleep(5000);
+      console.log(`Crawling week: ${week}, weekDay: ${weekDay}, city: ${city}`);
       const menuItems = await getMenuItems(weekDay, week, city);
       if (menuItems) {
         restaurants.push(...menuItems);
@@ -90,6 +88,7 @@ export default async function handler(
     }
   } else {
     // Otherwise get todays items
+    console.log(`Crawling week: ${week}, weekDay: ${weekDay}, city: ${city}`);
     const menuItems = await getMenuItems(weekDay, week, city);
     if (menuItems) {
       restaurants.push(...menuItems);

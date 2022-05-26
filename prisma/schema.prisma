@@ -10,18 +10,19 @@ datasource db {
 }
 
 model Restaurant {
-  id        Int        @id @default(autoincrement())
-  title     String
+  id        String        @id @default(cuid())
+  title     String     @unique
   address   String
   phone     String
-  weekDay   Int
-  week      Int
   menuItems MenuItem[]
 }
 
 model MenuItem {
-  id           Int         @id @default(autoincrement())
-  name         String
-  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
-  restaurantId Int?
+  id           String         @id @default(cuid())
+  description  String
+  weekDay      Int
+  week         Int
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  @@unique([weekDay, week, restaurantId])
 }
