@@ -16,6 +16,7 @@ const App: Component = () => {
   return (
     <>
       <h1>Schnitzellunch.se</h1>
+      <p>Week {week()}</p>
       <WeekDaySelector weekDay={weekDay()} setWeekDay={setWeekDay} />
       <Restaurants week={week} weekDay={weekDay} />
     </>
