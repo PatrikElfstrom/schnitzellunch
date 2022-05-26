@@ -23,8 +23,8 @@ export const Restaurants = ({ week, weekDay }: { week: any; weekDay: any }) => {
               <div>Address: {restaurant.address}</div>
               <div>Phone: {restaurant.phone}</div>
               <ul>
-                {restaurant.menuItems.map(({ name }) => (
-                  <li>{name}</li>
+                {restaurant.menuItems.map(({ description }) => (
+                  <li>{description}</li>
                 ))}
               </ul>
             </li>

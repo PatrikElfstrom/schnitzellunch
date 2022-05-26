@@ -13,14 +13,16 @@ export const restaurants = router().query("restaurants", {
     const { weekDay, week } = input || {};
 
     const restaurants = await prisma.restaurant.findMany({
-      where: {
-        weekDay,
-        week,
-      },
       include: {
-        menuItems: true,
+        menuItems: {
+          where: {
+            weekDay,
+            week,
+          },
+        },
       },
     });
-    return restaurants;
+
+    return restaurants.filter((restaurant) => restaurant.menuItems.length);
   },
 });
