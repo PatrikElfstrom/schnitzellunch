@@ -5,7 +5,7 @@ import { prisma } from "../_prisma";
 export const restaurants = router().query("restaurants", {
   input: z
     .object({
-      weekDay: z.number().min(0).max(6).optional(),
+      weekDay: z.number().min(1).max(7).optional(),
       week: z.number().min(1).max(52).optional(),
     })
     .optional(),
