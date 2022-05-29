@@ -4,11 +4,11 @@
   "description": "",
   "scripts": {
     "start": "vercel dev",
-    "build": "vite build",
+    "build": "prisma db push && vite build",
     "serve": "vite preview",
     "db": "pscale connect schnitzellunch main --port 3309",
-    "prisma-studio": "npx prisma studio --browser=none",
-    "sync-database": "npx prisma db push"
+    "prisma-studio": "prisma studio --browser=none",
+    "db:sync": "prisma db push"
   },
   "license": "MIT",
   "devDependencies": {

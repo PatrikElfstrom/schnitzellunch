@@ -47,7 +47,7 @@ const Main = styled("main")(() => ({
   overflow: "auto",
   gridArea: "2 / 1 / 3 / 2",
   zIndex: 2,
-  backdropFilter: "blur(50px)",
+  backdropFilter: "blur(30px)",
 }));
 
 const Map = styled("div")(() => ({
