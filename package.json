@@ -8,8 +8,7 @@
     "serve": "vite preview",
     "db": "pscale connect schnitzellunch main --port 3309",
     "prisma-studio": "prisma studio --browser=none",
-    "db:sync": "prisma db push",
-    "postinstall": "prisma generate"
+    "db:sync": "prisma db push"
   },
   "license": "MIT",
   "devDependencies": {
