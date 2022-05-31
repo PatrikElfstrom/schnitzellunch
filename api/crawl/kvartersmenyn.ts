@@ -41,6 +41,8 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
         title,
         address,
         phone,
+        latitude: null,
+        longitude: null,
         menuItems: menuItems.map((menuItem) => ({
           description: menuItem,
           week,

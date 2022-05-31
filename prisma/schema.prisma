@@ -10,19 +10,22 @@ datasource db {
 }
 
 model Restaurant {
-  id        String        @id @default(cuid())
+  id        String     @id @default(cuid())
   title     String     @unique
   address   String
   phone     String
+  latitude  Decimal?   @db.Decimal(10, 7)
+  longitude Decimal?   @db.Decimal(10, 7)
   menuItems MenuItem[]
 }
 
 model MenuItem {
-  id           String         @id @default(cuid())
+  id           String     @id @default(cuid())
   description  String
   weekDay      Int
   week         Int
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId String
+
   @@unique([weekDay, week, restaurantId])
 }
