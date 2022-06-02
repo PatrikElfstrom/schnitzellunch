@@ -11,6 +11,10 @@ export const geocodeAddress = async (address: string) => {
   const geocoder = NodeGeocoder(options as any);
   const entries = await geocoder.geocode(address);
 
+  if (entries.length === 0) {
+    return { latitude: null, longitude: null };
+  }
+
   const entry = entries[0];
 
   const latitude = entry.latitude ? new Prisma.Decimal(entry.latitude) : null;

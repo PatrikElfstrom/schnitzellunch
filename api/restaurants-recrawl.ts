@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { MenuItem, Prisma, Restaurant } from "@prisma/client";
+import { MenuItem, Restaurant } from "@prisma/client";
 import got from "got";
-import { prisma } from "./lib/_prisma";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
+import { prisma } from "./lib/_prisma";
 import { geocodeAddresses } from "./lib/_geocode";
 
 dayjs.extend(isoWeek);
@@ -85,13 +85,18 @@ const saveRestaurant = (restaurants: ExtendedResturant[]) =>
     }
   });
 
-const makeRequest = async (site: string, week?: number, weekDay?: number) => {
+const makeRequest = async (
+  url: string,
+  site: string,
+  week?: number,
+  weekDay?: number
+) => {
   const siteTimerStart = Date.now();
   const city = 19; // Gothenburg at kvartersmenyn
 
   try {
     let restaurants = await got({
-      url: `http://localhost:3000/api/crawl/${site}`,
+      url: `${url}/api/crawl/${site}`,
       searchParams: { weekDay, week, city },
     }).json<ExtendedResturant[]>();
 
@@ -125,6 +130,10 @@ export default async function handler(
 ) {
   const sitesTimerStart = Date.now();
 
+  const proto = request.headers["x-forwarded-proto"] as string;
+  const host = request.headers["x-vercel-deployment-url"] as string;
+  const url = new URL(`${proto}://${host}`).toString();
+
   const {
     weekDay: _weekDay,
     week: _week,
@@ -135,14 +144,15 @@ export default async function handler(
   const fullWeek = _fullWeek === "true";
   const week = parseInt(_week as string) || dayjs().isoWeek();
   const weekDay =
-    parseInt(_weekDay as string) || fullWeek ? undefined : dayjs().isoWeekday();
+    parseInt(_weekDay as string) ||
+    (fullWeek ? undefined : dayjs().isoWeekday());
   const city = parseInt(_city as string) || undefined;
 
   for (const site of sites) {
     console.log(
       `Crawling site: ${site}, week: ${week}, weekDay: ${weekDay}, city: ${city}`
     );
-    await makeRequest(site, week, weekDay);
+    await makeRequest(url, site, week, weekDay);
   }
 
   message(
