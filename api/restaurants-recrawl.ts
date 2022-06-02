@@ -94,6 +94,8 @@ const makeRequest = async (
   const siteTimerStart = Date.now();
   const city = 19; // Gothenburg at kvartersmenyn
 
+  console.log(`${url}/api/crawl/${site}`);
+
   try {
     let restaurants = await got({
       url: `${url}/api/crawl/${site}`,
