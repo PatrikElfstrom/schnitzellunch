@@ -1,10 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import got from "got";
+import { setTimeout } from "node:timers/promises";
 import { load } from "cheerio";
 import { decode } from "he";
-import { setTimeout } from "node:timers/promises";
 import { ExtendedResturant } from "../lib/_database";
 import { Crawler } from "../restaurants-recrawl";
+import { gotInstance } from "../lib/_got";
 
 // Sleep a random time betwen 0 and milliseconds
 const randomSleep = (milliseconds: number) =>
@@ -57,8 +56,7 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
 };
 
 const getMenuItems = async (weekDay: number, week: number, city: number) =>
-  got
-    .get(`https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
+  gotInstance(`https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
     .then(({ body }) => parseHTML(body, weekDay, week))
     .catch((error) => {
       console.error(error);

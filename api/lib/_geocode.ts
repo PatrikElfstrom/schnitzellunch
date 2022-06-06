@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import NodeGeocoder from "node-geocoder";
 import pThrottle from "p-throttle";
-import { ExtendedResturant } from "../restaurants-recrawl";
+import { ExtendedResturant } from "./_database";
 
 const options = {
   provider: "openstreetmap",
