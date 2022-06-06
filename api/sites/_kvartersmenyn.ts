@@ -3,7 +3,8 @@ import got from "got";
 import { load } from "cheerio";
 import { decode } from "he";
 import { setTimeout } from "node:timers/promises";
-import { ExtendedResturant } from "../restaurants-recrawl";
+import { ExtendedResturant } from "../lib/_database";
+import { Crawler } from "../restaurants-recrawl";
 
 // Sleep a random time betwen 0 and milliseconds
 const randomSleep = (milliseconds: number) =>
@@ -61,22 +62,11 @@ const getMenuItems = async (weekDay: number, week: number, city: number) =>
     .then(({ body }) => parseHTML(body, weekDay, week))
     .catch((error) => console.error(error));
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
-  const { weekDay: _weekDay, week: _week, city: _city } = request.query;
-
-  const weekDay = parseInt(_weekDay as string) || undefined;
-  const week = parseInt(_week as string) || undefined;
-  const city = parseInt(_city as string) || undefined;
-
-  if (!week || !city) {
-    response.status(400).json("Missing parameters");
-    return;
-  }
-
+const kvartersmenyn: Crawler = async ({ week, weekDay, city = 19 }) => {
+  const siteTimerStart = Date.now();
   let restaurants: ExtendedResturant[] = [];
+
+  console.log(`Crawling Kvartersmenyn`);
 
   if (!weekDay) {
     // If no weekDay is set, loop thru all week days
@@ -97,7 +87,12 @@ export default async function handler(
     }
   }
 
+  console.log(
+    `Kvartersmenyn crawled in ${(Date.now() - siteTimerStart) / 1000} seconds`
+  );
   console.log(`Found ${restaurants.length} restaurants`);
 
-  response.status(200).json(restaurants);
-}
+  return restaurants;
+};
+
+export default kvartersmenyn;
