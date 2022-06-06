@@ -5,8 +5,12 @@ import { ExtendedResturant } from "../lib/_database";
 import { Crawler } from "../restaurants-recrawl";
 import puppeteer from "puppeteer-extra";
 import puppeteerExtraPluginStealth from "puppeteer-extra-plugin-stealth";
+import _browserless from "browserless";
 
 puppeteer.use(puppeteerExtraPluginStealth());
+
+const browserlessFactory = _browserless({ puppeteer });
+let browserless: any;
 
 // Sleep a random time betwen 0 and milliseconds
 const randomSleep = (milliseconds: number) =>
@@ -60,13 +64,9 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
 
 const getMenuItems = async (weekDay: number, week: number, city: number) => {
   try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.goto(
+    const body = await browserless.html(
       `https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`
     );
-    const body = await page.content();
-    await browser.close();
 
     return parseHTML(body, weekDay, week);
   } catch (error) {
@@ -78,6 +78,7 @@ const getMenuItems = async (weekDay: number, week: number, city: number) => {
 const kvartersmenyn: Crawler = async ({ week, weekDay, city = 19 }) => {
   const siteTimerStart = Date.now();
   let restaurants: ExtendedResturant[] = [];
+  browserless = await browserlessFactory.createContext();
 
   console.log(`Crawling Kvartersmenyn`);
 
@@ -99,6 +100,9 @@ const kvartersmenyn: Crawler = async ({ week, weekDay, city = 19 }) => {
       restaurants.push(...menuItems);
     }
   }
+
+  await browserless.destroyContext();
+  await browserlessFactory.close();
 
   console.log(
     `Kvartersmenyn crawled in ${(Date.now() - siteTimerStart) / 1000} seconds`
