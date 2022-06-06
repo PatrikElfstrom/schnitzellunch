@@ -3,7 +3,10 @@ import { load } from "cheerio";
 import { decode } from "he";
 import { ExtendedResturant } from "../lib/_database";
 import { Crawler } from "../restaurants-recrawl";
-import { gotInstance } from "../lib/_got";
+import puppeteer from "puppeteer-extra";
+import puppeteerExtraPluginStealth from "puppeteer-extra-plugin-stealth";
+
+puppeteer.use(puppeteerExtraPluginStealth());
 
 // Sleep a random time betwen 0 and milliseconds
 const randomSleep = (milliseconds: number) =>
@@ -55,13 +58,22 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
   return restaurants;
 };
 
-const getMenuItems = async (weekDay: number, week: number, city: number) =>
-  gotInstance(`https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
-    .then(({ body }) => parseHTML(body, weekDay, week))
-    .catch((error) => {
-      console.error(error);
-      console.error(error.response.body);
-    });
+const getMenuItems = async (weekDay: number, week: number, city: number) => {
+  try {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto(
+      `https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`
+    );
+    const body = await page.content();
+    await browser.close();
+
+    return parseHTML(body, weekDay, week);
+  } catch (error) {
+    console.error(error);
+    console.error((error as any).response.body);
+  }
+};
 
 const kvartersmenyn: Crawler = async ({ week, weekDay, city = 19 }) => {
   const siteTimerStart = Date.now();

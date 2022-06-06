@@ -1,6 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { MenuItem, Restaurant } from "@prisma/client";
-import got from "got";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
 import { geocodeAddresses } from "./lib/_geocode";
