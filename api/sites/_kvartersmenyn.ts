@@ -58,7 +58,7 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
 
 const getMenuItems = async (weekDay: number, week: number, city: number) =>
   got
-    .get(`http://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
+    .get(`https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
     .then(({ body }) => parseHTML(body, weekDay, week))
     .catch((error) => console.error(error));
 
