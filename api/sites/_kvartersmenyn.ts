@@ -60,7 +60,10 @@ const getMenuItems = async (weekDay: number, week: number, city: number) =>
   got
     .get(`https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`)
     .then(({ body }) => parseHTML(body, weekDay, week))
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error(error);
+      console.error(error.response.body);
+    });
 
 const kvartersmenyn: Crawler = async ({ week, weekDay, city = 19 }) => {
   const siteTimerStart = Date.now();
