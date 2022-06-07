@@ -63,7 +63,9 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
 const getMenuItems = async (weekDay: number, week: number, city: number) => {
   try {
     const browser = await puppeteer.launch({
-      args: chromium.args.filter((arg) => arg !== "--disable-notifications"),
+      args: chromium.args.filter(
+        (arg: any) => arg !== "--disable-notifications"
+      ),
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath,
       headless: true,

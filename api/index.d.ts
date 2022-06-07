@@ -1,1 +1,1 @@
-declare module "browserless";
+declare module "chrome-aws-lambda";
