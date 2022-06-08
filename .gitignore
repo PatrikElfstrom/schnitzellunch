@@ -3,3 +3,4 @@ dist
 .vercel
 schnitzellunch-old
 schnitzellunch-old2
+.env
