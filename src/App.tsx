@@ -1,10 +1,4 @@
-import {
-  Component,
-  createEffect,
-  createMemo,
-  createSignal,
-  on,
-} from "solid-js";
+import { Component, createEffect, createMemo, createSignal } from "solid-js";
 import { WeekDaySelector } from "./components/WeekDaySelector";
 import { Restaurants } from "./components/Restaurants";
 import dayjs from "dayjs";
@@ -12,9 +6,6 @@ import isoWeek from "dayjs/plugin/isoWeek";
 import { createGlobalStyles, styled } from "solid-styled-components";
 import { MapContainer } from "./components/Map";
 import { Heading } from "./components/Heading";
-import { useAppContext } from "./lib/context";
-import { useWeek, useWeekDay } from "./lib/state";
-import { Restaurant } from "@prisma/client";
 import { createTrpcQuery } from "./lib/trpc";
 
 const GlobalStyles = () => {

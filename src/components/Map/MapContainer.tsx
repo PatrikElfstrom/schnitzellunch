@@ -12,12 +12,11 @@ import {
   tileLayer,
   Map,
   LayerGroup,
-  layerGroup,
+  icon,
 } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { styled } from "solid-styled-components";
-import { useRestaurants } from "../../lib/state";
-// import { useRestaurants, useWeek, useWeekDay } from "../../lib/state";
+import markerIcon from "../../images/schnitzel-marker.png";
 
 const Div = styled("div")(() => ({
   height: "100%",
@@ -32,6 +31,14 @@ export const MapContainer: Component<{
 
   const [getMap, setMap] = createSignal<Map>();
   const getLayerGroup = createMemo(() => new LayerGroup());
+  const getIcon = createMemo(() =>
+    icon({
+      iconUrl: markerIcon,
+      iconSize: [50, 34],
+      iconAnchor: [25, 17],
+      popupAnchor: [0, 0],
+    })
+  );
 
   onMount(() => {
     const map = leafletMap(mapRef, {
@@ -49,6 +56,7 @@ export const MapContainer: Component<{
       const map = getMap();
       const restaurants = getRestaurants();
       const layerGroup = getLayerGroup();
+      const icon = getIcon();
 
       if (map && restaurants) {
         map.addLayer(layerGroup);
@@ -57,7 +65,7 @@ export const MapContainer: Component<{
         for (const restaurant of restaurants) {
           if (restaurant.latitude && restaurant.longitude) {
             layerGroup.addLayer(
-              marker([restaurant.latitude, restaurant.longitude])
+              marker([restaurant.latitude, restaurant.longitude], { icon })
             );
           }
         }

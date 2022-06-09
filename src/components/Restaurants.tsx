@@ -1,8 +1,5 @@
-import { MenuItem, Restaurant } from "@prisma/client";
-import { Component, createEffect, For, on, Resource } from "solid-js";
+import { Component, For } from "solid-js";
 import { styled } from "solid-styled-components";
-import { useRestaurants } from "../lib/state";
-import { createTrpcQuery } from "../lib/trpc";
 
 const Loading = styled("div")(() => ({
   height: "100%",
