@@ -1,4 +1,4 @@
-import { MenuItem, Restaurant } from "@prisma/client";
+import { MenuItem, Prisma, Restaurant } from "@prisma/client";
 import { prisma } from "./_prisma";
 
 type PartialRestaurant = Pick<
@@ -70,3 +70,21 @@ export const saveRestaurant = (restaurants: ExtendedResturant[]) =>
       console.log(`Saved ${fulfilled.length} restaurants`);
     }
   });
+
+export const updateRestaurants = (restaurants: Restaurant[]) =>
+  Promise.allSettled(
+    restaurants.map(
+      async (restaurant) =>
+        await prisma.restaurant.update({
+          where: {
+            id: restaurant.id,
+          },
+          data: {
+            ...restaurant,
+          },
+        })
+    )
+  );
+
+export const getRestaurants = (args?: Prisma.RestaurantFindManyArgs) =>
+  prisma.restaurant.findMany(args);

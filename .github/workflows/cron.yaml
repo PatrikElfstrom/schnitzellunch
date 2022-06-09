@@ -1,10 +1,13 @@
-name: Trigger Crawler 09:00
 on:
   schedule:
     - cron: "0 9 * * *"
+    - cron: "5/5 9 * * *"
 jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Crawler
+        if: github.event.schedule != '5/5 9 * * *'
         run: curl https://schnitzellunch.se/api/restaurants-recrawl?fullWeek=true
+      - name: Geocode Addresses
+        run: curl https://schnitzellunch.se/api/geocode

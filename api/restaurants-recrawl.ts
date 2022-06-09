@@ -18,9 +18,6 @@ const crawlSite = async (crawler: Crawler, options: CrawlerOptions) => {
     console.log("Crawling...");
     let restaurants = await crawler(options);
 
-    console.log("Geocoding addresses...");
-    restaurants = await geocodeAddresses(restaurants);
-
     console.log("Saving restaurants...");
     await saveRestaurant(restaurants);
   } catch (error) {

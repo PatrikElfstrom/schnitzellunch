@@ -1,17 +1,29 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Restaurant } from "@prisma/client";
 import NodeGeocoder from "node-geocoder";
 import pThrottle from "p-throttle";
-import { ExtendedResturant } from "./_database";
 
 const options = {
   provider: "openstreetmap",
 };
 
-export const geocodeAddress = async (address: string) => {
+const fixAddress = (address: string) =>
+  address
+    .replace(/JA Wettergrens gata/i, "J A Wettergrens gata")
+    .replace(/Västra Frölunda/i, "Göteborg")
+    .replace(/Hisingsbacka/i, "Hisings backa")
+    .replace(/Säteri allén/i, "Säteriallén");
+
+export const geocodeAddress = async (_address: string) => {
+  const address = fixAddress(_address);
+  if (address !== _address) {
+    console.log(`Fixed address: ${_address} -> ${address}`);
+  }
+
   const geocoder = NodeGeocoder(options as any);
   const entries = await geocoder.geocode(address);
 
   if (entries.length === 0) {
+    console.log(`Could not geocode ${address}`);
     return { latitude: null, longitude: null };
   }
 
@@ -25,7 +37,9 @@ export const geocodeAddress = async (address: string) => {
   return { latitude, longitude };
 };
 
-export const geocodeAddresses = async (restaurants: ExtendedResturant[]) => {
+export const geocodeAddresses = async (restaurants: Restaurant[]) => {
+  // maximum of 1 request per second
+  // https://operations.osmfoundation.org/policies/nominatim/
   const throttle = pThrottle({
     limit: 1,
     interval: 1000,
