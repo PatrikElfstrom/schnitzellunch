@@ -1,5 +1,7 @@
-import { createEffect, For } from "solid-js";
+import { MenuItem, Restaurant } from "@prisma/client";
+import { Component, createEffect, For, on, Resource } from "solid-js";
 import { styled } from "solid-styled-components";
+import { useRestaurants } from "../lib/state";
 import { createTrpcQuery } from "../lib/trpc";
 
 const Loading = styled("div")(() => ({
@@ -11,37 +13,28 @@ const Loading = styled("div")(() => ({
   fontSize: "2em",
 }));
 
-export const Restaurants = ({ week, weekDay }: { week: any; weekDay: any }) => {
-  const [restaurants, { refetch }] = createTrpcQuery("restaurants", {
-    weekDay: weekDay(),
-    week: week(),
-  });
-
-  createEffect(() => {
-    refetch({ weekDay: weekDay(), week: week() });
-  });
-
-  return (
-    <>
-      {restaurants.loading && <Loading>Loading...</Loading>}
-      {restaurants.loading === false && (
-        <ul>
-          <For each={restaurants()}>
-            {(restaurant, i) => (
-              <li>
-                <h2>{restaurant.title}</h2>
-                <div>Address: {restaurant.address}</div>
-                <div>Phone: {restaurant.phone}</div>
-                <ul>
-                  {restaurant.menuItems.map(({ description }) => (
-                    <li>{description}</li>
-                  ))}
-                </ul>
-              </li>
-            )}
-          </For>
-        </ul>
-      )}
-    </>
-  );
-};
+export const Restaurants: Component<{ getRestaurants: any }> = ({
+  getRestaurants,
+}) => (
+  <>
+    {getRestaurants.loading && <Loading>Loading...</Loading>}
+    {getRestaurants.loading === false && (
+      <ul>
+        <For each={getRestaurants()}>
+          {(restaurant: any, i) => (
+            <li>
+              <h2>{restaurant.title}</h2>
+              <div>Address: {restaurant.address}</div>
+              <div>Phone: {restaurant.phone}</div>
+              <ul>
+                {restaurant.menuItems.map(({ description }: any) => (
+                  <li>{description}</li>
+                ))}
+              </ul>
+            </li>
+          )}
+        </For>
+      </ul>
+    )}
+  </>
+);

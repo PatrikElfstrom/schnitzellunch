@@ -1,4 +1,10 @@
-import { Component, createMemo, createSignal } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createMemo,
+  createSignal,
+  on,
+} from "solid-js";
 import { WeekDaySelector } from "./components/WeekDaySelector";
 import { Restaurants } from "./components/Restaurants";
 import dayjs from "dayjs";
@@ -6,6 +12,10 @@ import isoWeek from "dayjs/plugin/isoWeek";
 import { createGlobalStyles, styled } from "solid-styled-components";
 import { MapContainer } from "./components/Map";
 import { Heading } from "./components/Heading";
+import { useAppContext } from "./lib/context";
+import { useWeek, useWeekDay } from "./lib/state";
+import { Restaurant } from "@prisma/client";
+import { createTrpcQuery } from "./lib/trpc";
 
 const GlobalStyles = () => {
   const Styles = createGlobalStyles`
@@ -59,10 +69,17 @@ dayjs.extend(isoWeek);
 dayjs.Ls.en.weekStart = 1;
 
 const App: Component = () => {
-  const currentWeekDay = createMemo(() => dayjs().isoWeekday());
   const week = createMemo(() => dayjs().isoWeek());
+  const [weekDay, setWeekDay] = createSignal(dayjs().isoWeekday());
 
-  const [weekDay, setWeekDay] = createSignal(currentWeekDay());
+  const [getRestaurants, { refetch }] = createTrpcQuery("restaurants", {
+    week: week(),
+    weekDay: weekDay(),
+  });
+
+  createEffect(() => {
+    refetch({ weekDay: weekDay(), week: week() });
+  });
 
   return (
     <>
@@ -70,14 +87,17 @@ const App: Component = () => {
       <Container>
         <Header>
           <Heading>Schnitzellunch.se</Heading>
-          <p>Week {week()}</p>
+          <p>Week {week}</p>
           <WeekDaySelector weekDay={weekDay} setWeekDay={setWeekDay} />
         </Header>
         <Main>
-          <Restaurants week={week} weekDay={weekDay} />
+          <Restaurants getRestaurants={getRestaurants} />
         </Main>
         <Map>
-          <MapContainer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' />
+          <MapContainer
+            getRestaurants={getRestaurants}
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
         </Map>
       </Container>
     </>
