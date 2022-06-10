@@ -14,6 +14,8 @@ import {
   LayerGroup,
   icon,
   FeatureGroup,
+  bounds,
+  point,
 } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { styled } from "solid-styled-components";
@@ -26,7 +28,8 @@ const Div = styled("div")(() => ({
 export const MapContainer: Component<{
   getRestaurants: any;
   attribution: string;
-}> = ({ getRestaurants, attribution }) => {
+  mainRef: any;
+}> = ({ getRestaurants, attribution, mainRef }) => {
   let mapRef!: HTMLDivElement;
   const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
@@ -71,7 +74,9 @@ export const MapContainer: Component<{
           }
         }
 
-        map.fitBounds(featureGroup.getBounds());
+        map.fitBounds(featureGroup.getBounds(), {
+          paddingTopLeft: [mainRef.clientWidth, 0],
+        });
       }
     })
   );

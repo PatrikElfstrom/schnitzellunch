@@ -60,6 +60,7 @@ dayjs.extend(isoWeek);
 dayjs.Ls.en.weekStart = 1;
 
 const App: Component = () => {
+  let mainRef!: HTMLDivElement;
   const week = createMemo(() => dayjs().isoWeek());
   const [weekDay, setWeekDay] = createSignal(dayjs().isoWeekday());
 
@@ -81,12 +82,13 @@ const App: Component = () => {
           <p>Week {week}</p>
           <WeekDaySelector weekDay={weekDay} setWeekDay={setWeekDay} />
         </Header>
-        <Main>
+        <Main ref={mainRef}>
           <Restaurants getRestaurants={getRestaurants} />
         </Main>
         <Map>
           <MapContainer
             getRestaurants={getRestaurants}
+            mainRef={mainRef}
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
         </Map>
