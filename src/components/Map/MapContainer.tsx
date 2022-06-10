@@ -13,6 +13,7 @@ import {
   Map,
   LayerGroup,
   icon,
+  FeatureGroup,
 } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { styled } from "solid-styled-components";
@@ -30,7 +31,7 @@ export const MapContainer: Component<{
   const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
   const [getMap, setMap] = createSignal<Map>();
-  const getLayerGroup = createMemo(() => new LayerGroup());
+  const getFeatureGroup = createMemo(() => new FeatureGroup());
   const getIcon = createMemo(() =>
     icon({
       iconUrl: markerIcon,
@@ -55,20 +56,22 @@ export const MapContainer: Component<{
     on([getMap, getRestaurants], () => {
       const map = getMap();
       const restaurants = getRestaurants();
-      const layerGroup = getLayerGroup();
+      const featureGroup = getFeatureGroup();
       const icon = getIcon();
 
       if (map && restaurants) {
-        map.addLayer(layerGroup);
-        layerGroup.clearLayers();
+        featureGroup.addTo(map);
+        featureGroup.clearLayers();
 
         for (const restaurant of restaurants) {
           if (restaurant.latitude && restaurant.longitude) {
-            layerGroup.addLayer(
+            featureGroup.addLayer(
               marker([restaurant.latitude, restaurant.longitude], { icon })
             );
           }
         }
+
+        map.fitBounds(featureGroup.getBounds());
       }
     })
   );
