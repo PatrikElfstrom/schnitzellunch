@@ -93,7 +93,7 @@ export const MapContainer: Component<{
           currentSelectedRestaurant.latitude,
           currentSelectedRestaurant.longitude,
         ];
-        map.setView(location, 14);
+        map.setView(location, 15);
       } else {
         showAllRestaurants();
       }
