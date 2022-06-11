@@ -16,7 +16,9 @@ const List = styled("ul")(() => ({
 }));
 
 const RestaurantItem = styled("li")<{ selected: boolean }>((props) => ({
-  backgroundColor: props.selected ? "#f5f5f5" : "transparent",
+  backgroundColor: props.selected
+    ? "hsla(0, 0%, 96.1%, 0.8)"
+    : "hsla(0, 0%, 96.1%, 0.3)",
   padding: "1rem",
   color: "#333",
 }));
