@@ -10,6 +10,28 @@ const Loading = styled("div")(() => ({
   fontSize: "2em",
 }));
 
+const List = styled("ul")(() => ({
+  listStyle: "none",
+  padding: 0,
+}));
+
+const RestaurantItem = styled("li")<{ selected: boolean }>((props) => ({
+  backgroundColor: props.selected ? "#f5f5f5" : "transparent",
+  padding: "1rem",
+  color: "#333",
+}));
+
+const Headline = styled("h2")(() => ({
+  margin: "0 0 1rem",
+}));
+
+const MenuItem = styled("li")(() => ({
+  padding: "0.5rem 0",
+  "&:last-child": {
+    paddingBottom: 0,
+  },
+}));
+
 export const Restaurants: Component<{
   getRestaurants: any;
   setSelectedRestaurant: any;
@@ -32,25 +54,31 @@ export const Restaurants: Component<{
     <>
       {getRestaurants.loading && <Loading>Loading...</Loading>}
       {getRestaurants.loading === false && (
-        <ul>
+        <List>
           <For each={getRestaurants()}>
             {(restaurant: any, i) => (
-              <li
+              <RestaurantItem
                 ref={refs[restaurant.id]}
                 onClick={() => setSelectedRestaurant(restaurant)}
+                selected={restaurant === getSelectedRestaurant()}
               >
-                <h2>{restaurant.title}</h2>
-                <div>Address: {restaurant.address}</div>
-                <div>Phone: {restaurant.phone}</div>
-                <ul>
+                <Headline>{restaurant.title}</Headline>
+                <div>
+                  <b>Address:</b> {restaurant.address}
+                </div>
+                <div>
+                  <b>Phone:</b> {restaurant.phone}
+                </div>
+                <b>Menu items:</b>
+                <List>
                   {restaurant.menuItems.map(({ description }: any) => (
-                    <li>{description}</li>
+                    <MenuItem>{description}</MenuItem>
                   ))}
-                </ul>
-              </li>
+                </List>
+              </RestaurantItem>
             )}
           </For>
-        </ul>
+        </List>
       )}
     </>
   );
