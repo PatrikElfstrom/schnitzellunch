@@ -33,7 +33,7 @@ const Container = styled("div")(() => ({
   display: "grid",
   height: "100%",
   gridTemplateColumns: "40% 60%",
-  gridTemplateRows: "30% 70%",
+  gridTemplateRows: "fit-content(30%) auto",
 }));
 
 const Header = styled("header")(() => ({
@@ -94,6 +94,7 @@ const App: Component = () => {
         <Main ref={mainRef}>
           <Restaurants
             getRestaurants={getRestaurants}
+            getSelectedRestaurant={getSelectedRestaurant}
             setSelectedRestaurant={setSelectedRestaurant}
           />
         </Main>
