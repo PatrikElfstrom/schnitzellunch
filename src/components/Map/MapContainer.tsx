@@ -16,6 +16,8 @@ import {
   FeatureGroup,
   bounds,
   point,
+  LatLngTuple,
+  popup,
 } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { styled } from "solid-styled-components";
@@ -29,7 +31,15 @@ export const MapContainer: Component<{
   getRestaurants: any;
   attribution: string;
   mainRef: any;
-}> = ({ getRestaurants, attribution, mainRef }) => {
+  getSelectedRestaurant: any;
+  setSelectedRestaurant: any;
+}> = ({
+  getRestaurants,
+  attribution,
+  mainRef,
+  getSelectedRestaurant,
+  setSelectedRestaurant,
+}) => {
   let mapRef!: HTMLDivElement;
   const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
@@ -55,6 +65,41 @@ export const MapContainer: Component<{
     setMap(map);
   });
 
+  const showAllRestaurants = () => {
+    const featureGroup = getFeatureGroup();
+    const map = getMap();
+
+    if (map && featureGroup) {
+      try {
+        map.fitBounds(featureGroup.getBounds(), {
+          paddingTopLeft: [mainRef.clientWidth, 0],
+        });
+      } catch (error) {
+        // This will error on first load
+        // because featureGroup is not yet populated
+        // console.log("error", error);
+      }
+    }
+  };
+
+  createEffect(() => {
+    const map = getMap();
+    const featureGroup = getFeatureGroup();
+    const currentSelectedRestaurant = getSelectedRestaurant();
+
+    if (map) {
+      if (currentSelectedRestaurant) {
+        const location: LatLngTuple = [
+          currentSelectedRestaurant.latitude,
+          currentSelectedRestaurant.longitude,
+        ];
+        map.setView(location, 14);
+      } else {
+        showAllRestaurants();
+      }
+    }
+  });
+
   createEffect(
     on([getMap, getRestaurants], () => {
       const map = getMap();
@@ -68,15 +113,22 @@ export const MapContainer: Component<{
 
         for (const restaurant of restaurants) {
           if (restaurant.latitude && restaurant.longitude) {
-            featureGroup.addLayer(
-              marker([restaurant.latitude, restaurant.longitude], { icon })
+            const location: LatLngTuple = [
+              restaurant.latitude,
+              restaurant.longitude,
+            ];
+
+            const restaurantMarker = marker(location, { icon });
+
+            restaurantMarker.on("click", () =>
+              setSelectedRestaurant(restaurant)
             );
+
+            featureGroup.addLayer(restaurantMarker);
           }
         }
 
-        map.fitBounds(featureGroup.getBounds(), {
-          paddingTopLeft: [mainRef.clientWidth, 0],
-        });
+        showAllRestaurants();
       }
     })
   );

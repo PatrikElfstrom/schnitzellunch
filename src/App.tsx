@@ -7,6 +7,7 @@ import { createGlobalStyles, styled } from "solid-styled-components";
 import { MapContainer } from "./components/Map";
 import { Heading } from "./components/Heading";
 import { createTrpcQuery } from "./lib/trpc";
+import { Restaurant } from "@prisma/client";
 
 const GlobalStyles = () => {
   const Styles = createGlobalStyles`
@@ -63,6 +64,8 @@ const App: Component = () => {
   let mainRef!: HTMLDivElement;
   const week = createMemo(() => dayjs().isoWeek());
   const [weekDay, setWeekDay] = createSignal(dayjs().isoWeekday());
+  const [getSelectedRestaurant, _setSelectedRestaurant] =
+    createSignal<Restaurant | null>(null);
 
   const [getRestaurants, { refetch }] = createTrpcQuery("restaurants", {
     week: week(),
@@ -72,6 +75,12 @@ const App: Component = () => {
   createEffect(() => {
     refetch({ weekDay: weekDay(), week: week() });
   });
+
+  const setSelectedRestaurant = (restaurant: Restaurant) => {
+    _setSelectedRestaurant((prev: any) =>
+      prev === restaurant ? null : restaurant
+    );
+  };
 
   return (
     <>
@@ -83,12 +92,17 @@ const App: Component = () => {
           <WeekDaySelector weekDay={weekDay} setWeekDay={setWeekDay} />
         </Header>
         <Main ref={mainRef}>
-          <Restaurants getRestaurants={getRestaurants} />
+          <Restaurants
+            getRestaurants={getRestaurants}
+            setSelectedRestaurant={setSelectedRestaurant}
+          />
         </Main>
         <Map>
           <MapContainer
             getRestaurants={getRestaurants}
             mainRef={mainRef}
+            getSelectedRestaurant={getSelectedRestaurant}
+            setSelectedRestaurant={setSelectedRestaurant}
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
         </Map>

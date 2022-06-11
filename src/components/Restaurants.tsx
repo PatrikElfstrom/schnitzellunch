@@ -10,16 +10,17 @@ const Loading = styled("div")(() => ({
   fontSize: "2em",
 }));
 
-export const Restaurants: Component<{ getRestaurants: any }> = ({
-  getRestaurants,
-}) => (
+export const Restaurants: Component<{
+  getRestaurants: any;
+  setSelectedRestaurant: any;
+}> = ({ getRestaurants, setSelectedRestaurant }) => (
   <>
     {getRestaurants.loading && <Loading>Loading...</Loading>}
     {getRestaurants.loading === false && (
       <ul>
         <For each={getRestaurants()}>
           {(restaurant: any, i) => (
-            <li>
+            <li onClick={() => setSelectedRestaurant(restaurant)}>
               <h2>{restaurant.title}</h2>
               <div>Address: {restaurant.address}</div>
               <div>Phone: {restaurant.phone}</div>
