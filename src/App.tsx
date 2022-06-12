@@ -43,6 +43,7 @@ const Header = styled("header")(() => ({
   gridArea: "1 / 1 / 2 / 3",
   zIndex: 2,
   justifySelf: "center",
+  "-webkit-transform": "translateZ(0)", // Fixes Safari bug where header disappears behind map
 }));
 
 const Main = styled("main")(() => ({
