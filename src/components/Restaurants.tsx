@@ -16,9 +16,9 @@ const List = styled("ul")(() => ({
 }));
 
 const RestaurantItem = styled("li")<{ selected: boolean }>((props) => ({
-  backgroundColor: props.selected
-    ? "hsla(0, 0%, 96.1%, 0.8)"
-    : "hsla(0, 0%, 96.1%, 0.3)",
+  backgroundImage: props.selected
+    ? "linear-gradient(90deg, hsla(0, 0%, 96.1%, 0.9) 50%, hsla(0, 0%, 96.1%, 0) 100%)"
+    : "linear-gradient(90deg, hsla(0, 0%, 96.1%, 0.5) 50%, hsla(0, 0%, 96.1%, 0) 100%)",
   padding: "1rem",
   color: "#333",
 }));
