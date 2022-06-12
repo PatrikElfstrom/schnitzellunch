@@ -11,6 +11,7 @@ A simple project listing restaurants where one can get Schnitzel in Gothenburg.
 - Vercel - https://vercel.com/
 - Leaflet - https://leafletjs.com/
 - TypeScript - https://www.typescriptlang.org/
+- Logtail - https://betterstack.com/logtail
 
 ## Available Scripts
 
