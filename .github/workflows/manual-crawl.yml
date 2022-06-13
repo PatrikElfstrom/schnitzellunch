@@ -24,6 +24,7 @@ jobs:
         run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=7
   geocode:
     runs-on: ubuntu-latest
+    needs: crawl
     # Run a few times since we only do 5 at a time.
     steps:
       - name: Geocode Addresses
