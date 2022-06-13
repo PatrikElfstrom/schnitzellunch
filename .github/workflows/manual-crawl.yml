@@ -1,0 +1,36 @@
+name: Manual crawl
+
+on:
+  workflow_dispatch:
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    # Run once for each day
+    steps:
+      - name: Trigger Crawl Monday
+        run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=1
+      - name: Trigger Crawl Tuesday
+        run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=2
+      - name: Trigger Crawl Wednesday
+        run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=3
+      - name: Trigger Crawl Thursday
+        run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=4
+      - name: Trigger Crawl Friday
+        run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=5
+      - name: Trigger Crawl Saturday
+        run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=6
+      - name: Trigger Crawl Sunday
+        run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=7
+  geocode:
+    runs-on: ubuntu-latest
+    # Run a few times since we only do 5 at a time.
+    steps:
+      - name: Geocode Addresses
+        run: curl https://schnitzellunch.se/api/geocode
+      - name: Geocode Addresses
+        run: curl https://schnitzellunch.se/api/geocode
+      - name: Geocode Addresses
+        run: curl https://schnitzellunch.se/api/geocode
+      - name: Geocode Addresses
+        run: curl https://schnitzellunch.se/api/geocode
