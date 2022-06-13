@@ -1,11 +1,11 @@
 on:
   schedule:
-    - cron: "0 9 * * *"
-    - cron: "5/5 9 * * *"
+    - cron: "0 7 * * *"
+    - cron: "5/5 7 * * *"
 jobs:
   crawl:
     runs-on: ubuntu-latest
-    if: github.event.schedule == '0 9 * * *'
+    if: github.event.schedule == '0 7 * * *'
     steps:
       - name: Trigger Crawl Monday
         run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=1
@@ -23,7 +23,7 @@ jobs:
         run: curl https://schnitzellunch.se/api/restaurants-recrawl?weekDay=7
   geocode:
     runs-on: ubuntu-latest
-    if: github.event.schedule == '5/5 9 * * *'
+    if: github.event.schedule == '5/5 7 * * *'
     steps:
       - name: Geocode Addresses
         run: curl https://schnitzellunch.se/api/geocode
