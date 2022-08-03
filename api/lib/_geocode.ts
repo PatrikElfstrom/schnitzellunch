@@ -22,6 +22,7 @@ export const geocodeAddress = async (_address: string) => {
   const geocoder = NodeGeocoder({
     provider: "openstreetmap",
   });
+
   let entries = await geocoder.geocode(address);
 
   if (entries.length === 0) {
@@ -36,6 +37,7 @@ export const geocodeAddress = async (_address: string) => {
       language: "sv",
       region: "SE",
     });
+
     entries = await geocoder.geocode(address);
 
     if (entries.length > 1) {
@@ -61,7 +63,7 @@ export const geocodeAddress = async (_address: string) => {
       return previousValue.extra.confidence > currentValue.extra.confidence
         ? previousValue
         : currentValue;
-    }, {});
+    }, entries[0]);
 
   const latitude = entry.latitude ? new Prisma.Decimal(entry.latitude) : null;
   const longitude = entry.longitude
