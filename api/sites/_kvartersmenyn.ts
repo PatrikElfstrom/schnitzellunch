@@ -2,8 +2,8 @@ import { setTimeout } from "node:timers/promises";
 import { load } from "cheerio";
 import { decode } from "he";
 import got from "got";
-import { ExtendedResturant } from "../lib/_database";
-import { Crawler } from "../restaurants-recrawl";
+import { ExtendedResturant } from "../../lib/_database.js";
+import { Crawler } from "../restaurants-recrawl.js";
 
 // Sleep a random time betwen 0 and milliseconds
 const randomSleep = (milliseconds: number) =>

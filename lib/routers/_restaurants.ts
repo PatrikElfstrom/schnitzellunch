@@ -1,6 +1,6 @@
 import { router } from "@trpc/server";
 import { z } from "zod";
-import { prisma } from "../_prisma";
+import { prisma } from "../_prisma.js";
 
 export const restaurants = router().query("restaurants", {
   input: z

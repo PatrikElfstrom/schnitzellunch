@@ -2,6 +2,7 @@
   "name": "schnitzellunch",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
     "start": "vercel dev",
     "build": "vite build",
@@ -17,10 +18,12 @@
     "@types/leaflet": "^1.7.10",
     "@types/node": "^17.0.35",
     "@types/node-geocoder": "^3.24.4",
+    "@types/qs": "^6.9.7",
+    "@types/react-dom": "^18.0.11",
     "babel-preset-solid": "^1.4.2",
     "prisma": "^3.15.0",
-    "typescript": "^4.6.4",
-    "vercel": "^24.2.4",
+    "typescript": "^4.9.5",
+    "vercel": "^28.16.2",
     "vite": "^2.9.13",
     "vite-plugin-solid": "^2.2.6"
   },
@@ -45,7 +48,7 @@
     "npm": "8.19.3"
   },
   "engines": {
-    "node": "^16",
-    "npm": "^8"
-  }
+    "node": "^16"
+  },
+  "packageManager": "npm@8.19.3"
 }

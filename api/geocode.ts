@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getRestaurants, updateRestaurants } from "./lib/_database";
-import { geocodeAddresses } from "./lib/_geocode";
+import { getRestaurants, updateRestaurants } from "../lib/_database.js";
+import { geocodeAddresses } from "../lib/_geocode.js";
 
 export default async function handler(
   _request: NextApiRequest,

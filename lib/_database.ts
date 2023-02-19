@@ -1,5 +1,5 @@
 import { MenuItem, Prisma, Restaurant } from "@prisma/client";
-import { prisma } from "./_prisma";
+import { prisma } from "./_prisma.js";
 
 type PartialRestaurant = Pick<
   Restaurant,

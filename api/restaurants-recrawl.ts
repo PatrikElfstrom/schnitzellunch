@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dayjs from "dayjs";
-import isoWeek from "dayjs/plugin/isoWeek";
-import { geocodeAddresses } from "./lib/_geocode";
-import { ExtendedResturant, saveRestaurant } from "./lib/_database";
-import kvartersmenyn from "./sites/_kvartersmenyn";
+import isoWeek from "dayjs/plugin/isoWeek.js";
+import { ExtendedResturant, saveRestaurant } from "../lib/_database.js";
+import kvartersmenyn from "./sites/_kvartersmenyn.js";
 
 const sites = [kvartersmenyn];
 

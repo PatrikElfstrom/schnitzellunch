@@ -2,8 +2,8 @@ import { inferAsyncReturnType, router } from "@trpc/server";
 import {
   createNextApiHandler,
   CreateNextContextOptions,
-} from "@trpc/server/adapters/next";
-import { restaurants } from "../lib/routers/_restaurants";
+} from "@trpc/server/adapters/next/dist/trpc-server-adapters-next.cjs.js";
+import { restaurants } from "../../lib/routers/_restaurants.js";
 
 const createContext = async ({ req, res }: CreateNextContextOptions) => {
   return {
