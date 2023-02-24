@@ -1,6 +1,6 @@
 import { setTimeout } from "node:timers/promises";
 import { load } from "cheerio";
-import { decode } from "he";
+import he from "he";
 import got from "got";
 import { ExtendedResturant } from "../../lib/_database.js";
 import { Crawler } from "../restaurants-recrawl.js";
@@ -14,7 +14,7 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
   const restaurants: ExtendedResturant[] = [];
 
   $("#lista .panel").each((index, restaurant) => {
-    const title = decode($(".name .t_lunch", restaurant).text().trim());
+    const title = he.decode($(".name .t_lunch", restaurant).text().trim());
 
     let { address, phone } = $(".divider .name", restaurant)
       .text()
@@ -24,17 +24,17 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
     };
 
     // Remove more than two spaces whitespace
-    address = decode(address.replace(/\s{2,}/g, " ").trim());
+    address = he.decode(address.replace(/\s{2,}/g, " ").trim());
 
-    let menuItems = $(".rest-menu > p", restaurant)
+    let matchedMenuItems = $(".rest-menu > p", restaurant)
       .html()
       ?.replace(/<br>/g, "\n")
       .match(/^(.*\b(schnitzel)\b.*)$/gim);
 
-    if (menuItems) {
+    if (matchedMenuItems) {
       // remove whitespace
-      menuItems = menuItems.map((menuItem) =>
-        decode(menuItem.replace(/\s{2,}/g, " ").trim())
+      const menuItems = matchedMenuItems.map((menuItem) =>
+        he.decode(menuItem.replace(/\s{2,}/g, " ").trim())
       );
 
       restaurants.push({
