@@ -63,11 +63,13 @@ dayjs.Ls.en.weekStart = 1;
 const App: Component = () => {
   let mainRef!: HTMLDivElement;
   const week = createMemo(() => dayjs().isoWeek());
+  const year = createMemo(() => dayjs().isoWeekYear());
   const [weekDay, setWeekDay] = createSignal(dayjs().isoWeekday());
   const [getSelectedRestaurant, _setSelectedRestaurant] =
     createSignal<Restaurant | null>(null);
 
   const [getRestaurants, { refetch }] = createTrpcQuery("restaurants", {
+    year: year(),
     week: week(),
     weekDay: weekDay(),
   });

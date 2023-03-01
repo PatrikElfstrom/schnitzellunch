@@ -6,11 +6,12 @@ export const restaurants = router().query("restaurants", {
   input: z
     .object({
       weekDay: z.number().min(1).max(7).optional(),
-      week: z.number().min(1).max(52).optional(),
+      week: z.number().min(1).max(53).optional(), // ISO week year can have 53 weeks per year
+      year: z.number().optional(),
     })
     .optional(),
   async resolve({ input }) {
-    const { weekDay, week } = input || {};
+    const { weekDay, week, year } = input || {};
 
     const restaurants = await prisma.restaurant.findMany({
       include: {
@@ -18,6 +19,7 @@ export const restaurants = router().query("restaurants", {
           where: {
             weekDay,
             week,
+            year,
           },
         },
       },

@@ -1,16 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek.js";
-import { ExtendedResturant, saveRestaurant } from "../lib/_database.js";
+import { saveRestaurant } from "../lib/_database.js";
 import kvartersmenyn from "./sites/_kvartersmenyn.js";
+import { Prisma } from "@prisma/client";
 
 const sites = [kvartersmenyn];
 
 dayjs.extend(isoWeek);
 dayjs.Ls.en.weekStart = 1;
 
+export type CrawlerReturnType = {
+  title: string;
+  address: string;
+  phone: string;
+  latitude: Prisma.Decimal | null;
+  longitude: Prisma.Decimal | null;
+  menuItems: {
+    description: string;
+    weekDay: number;
+    week: number;
+  }[];
+};
+
 type CrawlerOptions = { week: number; weekDay?: number; city?: number };
-export type Crawler = (options: CrawlerOptions) => Promise<ExtendedResturant[]>;
+export type Crawler = (options: CrawlerOptions) => Promise<CrawlerReturnType[]>;
 
 const crawlSite = async (crawler: Crawler, options: CrawlerOptions) => {
   try {

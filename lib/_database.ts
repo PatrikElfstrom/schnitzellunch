@@ -1,22 +1,29 @@
-import { MenuItem, Prisma, Restaurant } from "@prisma/client";
+import { Prisma, Restaurant } from "@prisma/client";
+import dayjs from "dayjs";
 import { prisma } from "./_prisma.js";
 
-type PartialRestaurant = Pick<
-  Restaurant,
-  "title" | "address" | "phone" | "latitude" | "longitude"
->;
+type SaveRestaurant = {
+  id?: string;
+  title: string;
+  address: string;
+  phone: string;
+  latitude: Prisma.Decimal | null;
+  longitude: Prisma.Decimal | null;
+  menuItems: {
+    id?: string;
+    description: string;
+    weekDay: number;
+    week: number;
+    year?: number;
+    restaurantId?: string;
+  }[];
+};
 
-type PartialMenuItem = Pick<MenuItem, "description" | "week" | "weekDay">;
-
-export interface ExtendedResturant extends PartialRestaurant {
-  menuItems: PartialMenuItem[];
-}
-
-export const saveRestaurant = (restaurants: ExtendedResturant[]) =>
+export const saveRestaurant = (restaurants: SaveRestaurant[]) =>
   Promise.allSettled(
     restaurants.map(async (_restaurant) => {
-      const menuItems: PartialMenuItem[] = _restaurant.menuItems;
-      const restaurant: PartialRestaurant = {
+      const menuItems = _restaurant.menuItems;
+      const restaurant = {
         title: _restaurant.title,
         address: _restaurant.address,
         phone: _restaurant.phone,
@@ -37,9 +44,12 @@ export const saveRestaurant = (restaurants: ExtendedResturant[]) =>
       });
 
       for (const menuItem of menuItems) {
+        const year = dayjs().isoWeekYear();
+
         await prisma.menuItem.upsert({
           where: {
-            weekDay_week_restaurantId: {
+            weekDay_week_year_restaurantId: {
+              year: year,
               week: menuItem.week,
               weekDay: menuItem.weekDay,
               restaurantId: result.id,
@@ -49,7 +59,7 @@ export const saveRestaurant = (restaurants: ExtendedResturant[]) =>
             ...menuItem,
           },
           create: {
-            ...menuItem,
+            ...{ ...menuItem, year },
             restaurantId: result.id,
           },
         });

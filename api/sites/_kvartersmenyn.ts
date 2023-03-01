@@ -2,8 +2,7 @@ import { setTimeout } from "node:timers/promises";
 import { load } from "cheerio";
 import he from "he";
 import got from "got";
-import { ExtendedResturant } from "../../lib/_database.js";
-import { Crawler } from "../restaurants-recrawl.js";
+import { Crawler, CrawlerReturnType } from "../restaurants-recrawl.js";
 
 // Sleep a random time betwen 0 and milliseconds
 const randomSleep = (milliseconds: number) =>
@@ -11,7 +10,7 @@ const randomSleep = (milliseconds: number) =>
 
 const parseHTML = async (data: string, weekDay: number, week: number) => {
   const $ = load(data);
-  const restaurants: ExtendedResturant[] = [];
+  const restaurants: CrawlerReturnType[] = [];
 
   $("#lista .panel").each((index, restaurant) => {
     const title = he.decode($(".name .t_lunch", restaurant).text().trim());
@@ -75,7 +74,7 @@ const getMenuItems = async (weekDay: number, week: number, city: number) => {
 
 const kvartersmenyn: Crawler = async ({ week, weekDay, city = 19 }) => {
   const siteTimerStart = Date.now();
-  let restaurants: ExtendedResturant[] = [];
+  let restaurants: CrawlerReturnType[] = [];
 
   console.log(`Crawling Kvartersmenyn`);
 
