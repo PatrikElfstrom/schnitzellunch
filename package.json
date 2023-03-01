@@ -8,8 +8,9 @@
     "build": "vite build",
     "serve": "vite preview",
     "db": "pscale connect schnitzellunch main --port 3309",
-    "prisma-studio": "prisma studio --browser=none",
-    "db:sync": "prisma db push"
+    "db:sync": "prisma db push",
+    "db:generate": "prisma generate",
+    "prisma-studio": "prisma studio --browser=none"
   },
   "license": "MIT",
   "sideEffects": false,
@@ -21,14 +22,14 @@
     "@types/qs": "^6.9.7",
     "@types/react-dom": "^18.0.11",
     "babel-preset-solid": "^1.4.2",
-    "prisma": "^3.15.0",
+    "prisma": "^4.11.0",
     "typescript": "^4.9.5",
     "vercel": "^28.16.2",
     "vite": "^2.9.13",
     "vite-plugin-solid": "^2.2.6"
   },
   "dependencies": {
-    "@prisma/client": "^3.15.0",
+    "@prisma/client": "^4.11.0",
     "@trpc/client": "^9.23.4",
     "@trpc/server": "^9.23.4",
     "cheerio": "^1.0.0-rc.11",
