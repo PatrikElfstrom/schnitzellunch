@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek.js";
 import { saveRestaurant } from "../lib/_database.js";
 import kvartersmenyn from "./sites/_kvartersmenyn.js";
-import { Prisma } from "@prisma/client";
 
 const sites = [kvartersmenyn];
 
@@ -14,8 +13,8 @@ export type CrawlerReturnType = {
   title: string;
   address: string;
   phone: string;
-  latitude: Prisma.Decimal | null;
-  longitude: Prisma.Decimal | null;
+  latitude: number | null;
+  longitude: number | null;
   menuItems: {
     description: string;
     weekDay: number;

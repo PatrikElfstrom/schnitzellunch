@@ -7,8 +7,8 @@ type SaveRestaurant = {
   title: string;
   address: string;
   phone: string;
-  latitude: Prisma.Decimal | null;
-  longitude: Prisma.Decimal | null;
+  latitude: number | null;
+  longitude: number | null;
   menuItems: {
     id?: string;
     description: string;

@@ -7,10 +7,10 @@
     "start": "vercel dev",
     "build": "vite build",
     "serve": "vite preview",
-    "db": "pscale connect schnitzellunch main --port 3309",
     "db:sync": "prisma db push",
     "db:generate": "prisma generate",
-    "prisma-studio": "prisma studio --browser=none"
+    "prisma-studio": "prisma studio --browser=none",
+    "postinstall": "prisma generate"
   },
   "license": "MIT",
   "sideEffects": false,
@@ -22,14 +22,16 @@
     "@types/qs": "^6.9.7",
     "@types/react-dom": "^18.0.11",
     "babel-preset-solid": "^1.4.2",
-    "prisma": "^4.11.0",
+    "prisma": "^5.10.2",
     "typescript": "^4.9.5",
     "vercel": "^28.16.2",
     "vite": "^2.9.16",
     "vite-plugin-solid": "^2.2.6"
   },
   "dependencies": {
-    "@prisma/client": "^4.11.0",
+    "@libsql/client": "^0.4.3",
+    "@prisma/adapter-libsql": "^5.10.2",
+    "@prisma/client": "^5.10.2",
     "@trpc/client": "^9.23.4",
     "@trpc/server": "^9.23.4",
     "cheerio": "^1.0.0-rc.11",
