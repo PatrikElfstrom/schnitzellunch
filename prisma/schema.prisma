@@ -16,6 +16,8 @@ model Restaurant {
   latitude  Decimal?   @db.Decimal(10, 7)
   longitude Decimal?   @db.Decimal(10, 7)
   menuItems MenuItem[]
+
+  @@index([latitude, longitude])
 }
 
 model MenuItem {
