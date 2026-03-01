@@ -57,7 +57,7 @@ const parseHTML = async (data: string, weekDay: number, week: number) => {
 const getMenuItems = async (weekDay: number, week: number, city: number) => {
   try {
     const targetUrl = `https://www.kvartersmenyn.se/find/_/city/${city}/day/${weekDay}`;
-    const url = new URL("https://puppeteer.elfstrom.io");
+    const url = new URL("https://crawler.elfstrom.io");
     url.searchParams.set("url", targetUrl);
 
     const body = await got(url.href, {
